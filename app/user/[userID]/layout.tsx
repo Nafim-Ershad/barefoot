@@ -1,11 +1,15 @@
 'use client'
 
-import { HTMLAttributes, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { BookUser, CircleUser, CreditCard, ScrollText } from 'lucide-react';
 
-function Layout({ children }: HTMLAttributes<HTMLDivElement>): ReactNode {
+type UserLayoutProps = {
+  children: ReactNode
+}
+
+function Layout({ children }: UserLayoutProps ): ReactNode {
   const { userID } = useParams();
   return (
     <div className='w-[95%] h-[98%] flex items-center justify-start shadow-lg rounded-3xl'>
@@ -50,4 +54,4 @@ function Layout({ children }: HTMLAttributes<HTMLDivElement>): ReactNode {
   )
 }
 
-export default Layout
+export default Layout;
