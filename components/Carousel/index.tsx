@@ -80,7 +80,7 @@ export default function VerticalCarousel({items}: VerticalCarouselProps):ReactNo
       >
         {items.map((item, index) => (
           <div key={index} className="carousel-item">
-            {item}
+            { item }
           </div>
         ))}
       </div>
@@ -95,7 +95,6 @@ export default function VerticalCarousel({items}: VerticalCarouselProps):ReactNo
                 className={`w-1 ${idx === activeIndex ? 'h-10' : 'h-1'} rounded-full bg-slate-200 cursor-pointer transition-all duration-200 ease-in-out`}
                 onClick={() => changeToActive(idx)}
               >
-
               </div>
             )
           })

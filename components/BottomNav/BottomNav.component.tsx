@@ -13,7 +13,7 @@ export default function BottomNav(): ReactNode {
         <div className={"absolute bottom-5 left-0 w-full h-10 px-6 flex items-center justify-center text-black"}>
             <div className="relative w-full h-full flex items-center justify-between">
                 <Link
-                    href={'/search'}
+                    href={'/browse'}
                     className={"absolute left-52 -translate-x-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:scale-150 transition-all duration-200 ease-in-out"}
                     >
                     <Search/>
