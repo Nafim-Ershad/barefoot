@@ -1,6 +1,6 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
-function Page() {
+function Page(): ReactNode {
   return (
     <div className='w-full h-3/4 px-4 py-2 flex flex-col items-center justify-center'>
         {/* Sort Bar */}

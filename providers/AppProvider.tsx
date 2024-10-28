@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useState, ReactNode, HTMLAttributes, Dispatch, SetStateAction } from "react"
+import UserSettingsPageProvider from "./UserSettings/UserSettings.Provider";
 
 type tApp = {
     currentTab: 'men' | 'women' | 'kids' | string
@@ -27,7 +28,9 @@ export default function AppProvider(props: HTMLAttributes<HTMLDivElement>): Reac
 
     return(
         <AppContext.Provider value={{appState: state, setAppState: setState}}>
-            {props.children}
+            <UserSettingsPageProvider>
+                {props.children}
+            </UserSettingsPageProvider>
         </AppContext.Provider>
     )
 }
