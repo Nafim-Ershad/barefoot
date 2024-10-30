@@ -1,4 +1,5 @@
 import { browseDataType } from "@/data/data";
+import Image from "next/image";
 import { HTMLAttributes, ReactNode } from "react";
 
 interface iProductCard extends HTMLAttributes<HTMLDivElement>{
@@ -8,18 +9,18 @@ interface iProductCard extends HTMLAttributes<HTMLDivElement>{
 export default function Index({ item }: iProductCard): ReactNode{
     return(
         <div 
-        className="w-[310px] h-[550px] px-4 py-3 border-solid border-[1px] border-black flex flex-col items-center justify-between text-black"
+        className="w-[350px] h-[550px] px-4 py-3 border-solid border-[1px] border-black flex flex-col items-center justify-between text-black"
         >
             <div className="h-2/3 w-full">
-                <img src={item?.imgURL} alt="product" className="w-full h-full"/>
+                <Image src={item?.imgURL} alt="product" className="w-full h-full" height={0} width={0} unoptimized/>
             </div>
-            <h2 className="w-full text-left">{ item?.name }</h2>
+            <h2 className="w-full text-left text-2xl">{ item?.name }</h2>
             <span className="w-full flex items-center justify-between">
                 <p>Colors: </p>
                 <span className="flex items-center justify-center gap-1">
                     { 
                         item?.colors.map((color, idx) => 
-                            <span className={`w-4 h-4 rounded-full bg-[${color}] cursor-pointer`} key={idx}>
+                            <span style={{ background: color }} className={`w-4 h-4 rounded-full border-solid border border-black cursor-pointer`} key={idx}>
                             </span>
                         ) 
                     }

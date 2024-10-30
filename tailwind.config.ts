@@ -14,7 +14,10 @@ const config: Config = {
   			lg: '0.5rem',
   			md: 'calc(0.5rem - 2px)',
   			sm: 'calc(0.5rem - 4px)'
-  		}
+  		},
+		screens: {
+			"4xl": "1920px" 
+		}
   	},
 	  letterSpacing: {
 		tightest: '-.075em',
