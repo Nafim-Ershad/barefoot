@@ -1,5 +1,4 @@
 import { browseDataType } from "@/data/data";
-import Image from "next/image";
 import { HTMLAttributes, ReactNode } from "react";
 
 interface iProductCard extends HTMLAttributes<HTMLDivElement>{
@@ -12,7 +11,7 @@ export default function Index({ item }: iProductCard): ReactNode{
         className="w-[350px] h-[550px] px-4 py-3 border-solid border-[1px] border-black flex flex-col items-center justify-between text-black"
         >
             <div className="h-2/3 w-full">
-                <Image src={item?.imgURL} alt="product" className="w-full h-full" height={0} width={0} unoptimized/>
+                <img src={item?.imgURL} alt="product" className="w-full h-full"/>
             </div>
             <h2 className="w-full text-left text-2xl">{ item?.name }</h2>
             <span className="w-full flex items-center justify-between">
