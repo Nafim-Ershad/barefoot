@@ -9,7 +9,7 @@ import ProductContainer from '@/components/ProductContainer'
 import { browseData } from '@/data/data'
 
 function Page(): ReactNode {
-    const [ filterColor, setFilterColor ] = useState<string | null>(null);
+    // const [ filterColor, setFilterColor ] = useState<string | null>(null);
     const [ extendedMenu, setExtendedMenu ] = useState<boolean>(false);
 
     const allColors: string[] = [];
