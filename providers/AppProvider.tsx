@@ -2,6 +2,7 @@
 
 import { createContext, useState, ReactNode, HTMLAttributes, Dispatch, SetStateAction } from "react"
 import UserSettingsPageProvider from "./UserSettings/UserSettings.Provider";
+import CartProvider from "./Cart/Cart.Provider";
 
 type tApp = {
     currentTab: 'men' | 'women' | 'kids' | string
@@ -21,7 +22,7 @@ export const AppContext = createContext<iApp>({
     setAppState: () => {}
 });
 
-export default function AppProvider(props: HTMLAttributes<HTMLDivElement>): ReactNode{
+export default function AppProvider({ children }: HTMLAttributes<HTMLDivElement>): ReactNode{
     const [ state, setState ] = useState<tApp>({
         ...initialState
     });
@@ -29,7 +30,9 @@ export default function AppProvider(props: HTMLAttributes<HTMLDivElement>): Reac
     return(
         <AppContext.Provider value={{appState: state, setAppState: setState}}>
             <UserSettingsPageProvider>
-                {props.children}
+                <CartProvider>
+                    { children }
+                </CartProvider>
             </UserSettingsPageProvider>
         </AppContext.Provider>
     )

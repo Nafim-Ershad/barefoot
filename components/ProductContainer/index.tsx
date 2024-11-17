@@ -1,15 +1,39 @@
-import { HTMLAttributes, ReactNode } from "react";
+'use client';
+
+import { HTMLAttributes, ReactNode, useContext, useMemo } from "react";
 import ProductCard from "../ProductCard";
+
 import { browseDataType } from "@/data/data";
+import { FilterContext } from "@/providers/FilterOptions/FilterOptions.Context";
 
 interface iProductContainer extends HTMLAttributes<HTMLDivElement>{
     items: browseDataType[]
 }
 
 export default function ProductContainer({ items }: iProductContainer ): ReactNode{
+    
+    const { filterOptions } = useContext(FilterContext);
+    // useMemo for derived states || useEffect for local state
+    const sortedItems = useMemo(() => {
+        return [...items].sort((a, b) => {
+            switch(filterOptions.sortBy){
+                case "price_asc":
+                    return a.price - b.price;
+                case "price_desc":
+                    return b.price - a.price;
+                case "popular_asc":
+                    return a.sold - b.sold;
+                case "popular_desc":
+                    return b.sold - a.sold;
+            }
+        });
+    }, [filterOptions.sortBy, items]);
+
     return(
-        <div className="w-full h-[95%] max-h-[400px] xl:max-h-[450px] 2xl:max-h-[780px] 4xl:max-h-[960px] px-8 py-4 flex flex-wrap items-center justify-start gap-3 overflow-y-auto">
-            { items.map((item, idx) => <ProductCard key={idx} item={item}/>)}
+        <div className="w-full h-[85%] px-8 py-3 inline-flex flex-wrap items-center justify-start gap-4 overflow-y-auto">
+            {
+                sortedItems.map((item, idx) => <ProductCard key={idx} item={item}/>)
+            }
         </div>
     )
 }

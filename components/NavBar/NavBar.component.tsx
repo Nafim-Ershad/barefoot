@@ -9,9 +9,12 @@ import Link from "next/link"
 import { ShoppingBag, Heart } from 'lucide-react';
 
 import { AppContext } from "@/providers/AppProvider";
+import { CartContext } from "@/providers/Cart/Cart.Context";
 
 export default function NavBar(): ReactNode{
     const { appState, setAppState } = useContext(AppContext);
+    const { cartItems } = useContext(CartContext);
+
     const pathName  = usePathname();
     const changeTab = (tab: string) => {
         setAppState({
@@ -65,9 +68,21 @@ export default function NavBar(): ReactNode{
                     className={`tracking-wide ${appState.currentTab === 'kids' ? 'border-b-2 border-solid border-black text-2xl font-semibold' : 'text-xl'} hover:scale-110 transition-all duration-300 ease-in-out`}
                 >KIDS</Link>
             </nav>
-            <div className={"py-2 px-3 flex items-center justify-between gap-4"}>
-                <ShoppingBag className={"cursor-pointer"}/>
-                <Heart className={"cursor-pointer"}/>
+            <div className={"px-3 flex items-center justify-between gap-4"}>
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <ShoppingBag className={"cursor-pointer"}/>
+                    {
+                        cartItems.length ? 
+                        <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 w-3 h-3 flex items-center justify-center">
+                            { cartItems.length }
+                        </span>
+                        :
+                        null
+                    }
+                </div>
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <Heart className={"cursor-pointer"}/>
+                </div>
             </div>
         </header>
     )

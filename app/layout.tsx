@@ -8,6 +8,7 @@ import AppProvider from "@/providers/AppProvider";
 
 import NavBar from "@/components/NavBar/NavBar.component";
 import BottomNav from "@/components/BottomNav/BottomNav.component";
+import FilterOptionsProvider from "@/providers/FilterOptions/FilterOptions.Provider";
 
 const agdasima = Agdasima({
   weight: "400",
@@ -34,10 +35,12 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
-          >
-            <NavBar/>
-            {children}
-            <BottomNav/>
+            >
+            <FilterOptionsProvider>
+              <NavBar/>
+              {children}
+              <BottomNav/>
+            </FilterOptionsProvider>
             <Analytics/>
           </ThemeProvider>
         </AppProvider>
