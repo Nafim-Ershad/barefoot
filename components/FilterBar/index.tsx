@@ -48,20 +48,19 @@ function Index(): ReactNode {
         setExtendedCollectionMenu(!extendedCollectionMenu);
     }
 
-    const changeCheckedFilter = (event: ChangeEvent<HTMLInputElement>, category: string, value: string) => {
+    const changeCheckedFilter = (event: ChangeEvent<HTMLInputElement>, category: keyof tFilter, value: string) => {
         if(category === 'stock'){
             setFilterState({
                 ...filterState,
                 stock: value
             })
         }
-        else{
+        else if(category !== 'price'){
             setFilterState((prevState) => {
                 const categoryValues = prevState[category];
-
                 const updatedArray = categoryValues.includes(value) ? categoryValues.filter((item: string) => item !== value) : [...categoryValues, value]; 
                 
-                return{
+                return {
                     ...prevState,
                     [category]: updatedArray
                 }
