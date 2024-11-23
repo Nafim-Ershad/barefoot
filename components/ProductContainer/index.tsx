@@ -30,10 +30,12 @@ export default function ProductContainer({ items }: iProductContainer ): ReactNo
     }, [filterOptions.sortBy, items]);
 
     return(
-        <div className="w-full h-[85%] px-8 py-3 inline-flex flex-wrap items-center justify-start gap-4 overflow-y-auto">
+        <div className="w-full h-[85%] flex items-center justify-center overflow-y-auto">
+            <div className="w-full h-full px-8 py-3 inline-flex flex-wrap items-center justify-start gap-4">
             {
                 sortedItems.map((item, idx) => <ProductCard key={idx} item={item}/>)
             }
+            </div>
         </div>
     )
 }

@@ -54,7 +54,7 @@ function Page(): ReactNode {
                     </div>
                 </div>
                 {/* Filter and cards */}
-            <div className={`w-full sm:h-full h-[90%] px-2 border-[1px] border-solid border-slate-300 rounded-2xl flex items-center justify-between sm:flex-row flex-col`}>
+            <div className={`w-full sm:h-full h-[90%] border-[1px] border-solid border-slate-300 rounded-2xl flex items-center justify-between sm:flex-row flex-col`}>
                     {/* Filter */}
                     <FilterBar/>
                     {/* Cards */}

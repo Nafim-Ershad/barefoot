@@ -1,10 +1,15 @@
 'use client'
 
-import { ChangeEvent, ReactNode, useState } from 'react';
+import { ChangeEvent, ReactNode, useContext, useEffect, useState } from 'react';
 import { ChevronsDown } from 'lucide-react';
+
+import Checkbox from '../Checkbox';
+import ColorCheckbox from '../ColorCheckbox';
+import RadioGroupFilter from '../RadioGroupFilter';
 
 import { tFilter } from '@/lib/type';
 import { browseData } from '@/data/data';
+import { FilterContext } from '@/providers/FilterOptions/FilterOptions.Context';
 
 function Index(): ReactNode {
     
@@ -17,16 +22,7 @@ function Index(): ReactNode {
     const minPrice = Math.min(...allPrices);
     const maxPrice = Math.max(...allPrices);
 
-    const [ filterState, setFilterState ] = useState<tFilter>({
-        stock: 'all',
-        colors: [],
-        sizes: [],
-        collections: [],
-        price: {
-            min: minPrice,
-            max: maxPrice
-        }
-    });
+    const { filterOptions, setFilterOptions } = useContext(FilterContext);
 
     const allColors: string[] = [];
     browseData.forEach(data => data.colors.forEach(color => !allColors.includes(color) ? allColors.push(color): null));
@@ -34,7 +30,7 @@ function Index(): ReactNode {
     const allSizes: string[] = [];
     browseData.forEach(data => data.size.forEach(size => !allSizes.includes(size) ? allSizes.push(size): null));
 
-    const allCollections: string[] = ['male', "female", "kids"];
+    const allCollections: string[] = ["male", "female", "kids"];
     
     const toggleColorMenu = () => {
         setExtendedColorMenu(!extendedColorMenu);
@@ -48,47 +44,69 @@ function Index(): ReactNode {
         setExtendedCollectionMenu(!extendedCollectionMenu);
     }
 
-    const changeCheckedFilter = (event: ChangeEvent<HTMLInputElement>, category: keyof tFilter, value: string) => {
+    const changeCheckedFilter = (category: keyof tFilter, value: string) => {
         if(category === 'stock'){
-            setFilterState({
-                ...filterState,
-                stock: value
+            setFilterOptions({
+                ...filterOptions,
+                filter: {
+                    ...filterOptions.filter,
+                    stock: value
+                }
             })
         }
         else if(category !== 'price'){
-            setFilterState((prevState) => {
-                const categoryValues = prevState[category];
+            setFilterOptions((prevState) => {
+                const categoryValues = prevState.filter[category];
                 const updatedArray = categoryValues.includes(value) ? categoryValues.filter((item: string) => item !== value) : [...categoryValues, value]; 
                 
                 return {
                     ...prevState,
-                    [category]: updatedArray
+                    filter: {
+                        ...prevState.filter,
+                        [category]: updatedArray
+                    }
                 }
             
             });
         }
     }
 
-    // const changePriceFilter = (event: ChangeEvent<HTMLIFrameElement>, value: number) => {
-    //     return;
-    // }
+    const changeRadioFilter = (value: string) => {
+        console.log(value);
+        setFilterOptions({
+            ...filterOptions,
+            filter: {
+                ...filterOptions.filter,
+                stock: value
+            }
+        })
+    }
+
+    const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFilterOptions({
+            ...filterOptions,
+            filter: {
+                ...filterOptions.filter,
+                price: {
+                    ...filterOptions.filter.price,
+                    [name]: parseFloat(value)
+                }
+            }
+        });
+    }
+
+    useEffect(() => {
+        // console.log(filterOptions.filter);
+    })
 
     return (
         <div className='sm:w-40 sm:h-[95%] px-2 py-1 border-r-[1px] hidden sm:flex sm:flex-col sm:items-start sm:justify-start gap-2 overflow-y-auto'>
+            {/* ITEM AVAILIBILITY */}
             <div className='flex flex-col items-center justify-between'>
-                <span className='sm:w-24 text-black flex items-center justify-start gap-3'>
-                    <input type="checkbox" name="in_stock" onChange={e=> changeCheckedFilter(e, "stock", 'stock')}/>
-                    <label>In Stock</label>
-                </span>
-                <span className='sm:w-24 text-black flex items-center justify-start gap-3'>
-                    <input type="checkbox" name="coming_soon"  onChange={e=> changeCheckedFilter(e, "stock", 'soon')}/>
-                    <label>Coming Soon</label>
-                </span>
-                <span className='sm:w-24 text-black flex items-center justify-start gap-3'>
-                    <input type="checkbox" name="all"  onChange={e=> changeCheckedFilter(e, "stock", 'all')}/>
-                    <label>All</label>
-                </span>
+                <RadioGroupFilter items={['In Stock', 'Coming Soon', 'All']} style={{ width: '100%' }} radioChange={changeRadioFilter}/>
             </div>
+            {/* COLOR MENU */}
             <div className='w-full py-1 flex flex-col items-start justify-between text-black'>
                 <span className='w-full flex items-center justify-between'>
                     <span className='text-md'>Colors</span>
@@ -107,13 +125,13 @@ function Index(): ReactNode {
                         allColors.map(
                             (color, idx) => 
                                 <span key={idx} className={`px-1 py-2 border border-solid border-slate-200 drop-shadow-lg rounded-xl ${extendedColorMenu ? "flex items-center justify-between gap-3" : "hidden"} `}>
-                                    <input type="checkbox" name={color} onChange={(e) => changeCheckedFilter(e, "colors", color)}/>
-                                    <span style={{background: color}} className='w-3 h-3 border-solid border-black border-[1px] rounded-full'></span>
+                                    <ColorCheckbox color={color} stateFunction={() => changeCheckedFilter('colors', color)} checked={ filterOptions.filter.colors.includes(color) ? true : false }/>
                                 </span>
                         )
                     }
                 </span>
             </div>
+            {/* SIZE MENU */}
             <div className='w-full py-1 flex flex-col items-start justify-between text-black'>
                 <span className='w-full flex items-center justify-between'>
                     <span className='text-md'>Size</span>
@@ -135,13 +153,13 @@ function Index(): ReactNode {
                                     key={idx} 
                                     className={`min-w-12 p-2 border border-solid border-slate-200 drop-shadow-lg rounded-xl ${extendedSizeMenu ? "flex items-center justify-between" : "hidden"} text-sm`}
                                 >
-                                    <input type="checkbox" name={size} onChange={(e) => changeCheckedFilter(e, "sizes", size)}/>
-                                    <span>{ size }</span>
+                                    <Checkbox label={ size } stateFunction={() => changeCheckedFilter('sizes', size)} checked={ filterOptions.filter.sizes.includes(size) ? true : false }/>
                                 </span>
                         )
                     }
                 </span>
             </div>
+            {/* COLLECTION MENU */}
             <div className='w-full py-1 flex flex-col items-start justify-between text-black'>
                 <span className='w-full flex items-center justify-between'>
                     <span className='text-md'>Collection</span>
@@ -163,8 +181,7 @@ function Index(): ReactNode {
                                     key={idx} 
                                     className={`min-w-20 px-4 py-2 border border-solid border-slate-200 drop-shadow-lg rounded-xl ${extendedCollectionMenu ? "flex items-center justify-between gap-3" : "hidden"} text-sm`}
                                 >
-                                    <input type="checkbox" name={collection} onChange={(e) => changeCheckedFilter(e ,"collections", collection)}/>
-                                    <span className='w-full text-left'>{ collection.toUpperCase() }</span>
+                                    <Checkbox label={ collection.toUpperCase() } stateFunction={() => changeCheckedFilter('collections', collection)} checked={ filterOptions.filter.collections.includes(collection) ? true : false }/>
                                 </span>
                         )
                     }
@@ -177,16 +194,25 @@ function Index(): ReactNode {
                     <span className='w-full flex items-center justify-between gap-2'>
                         <input 
                             type="number" 
+                            name='min'
                             placeholder={`${minPrice.toFixed(2)}`} 
                             className='w-2/3 rounded-md bg-white text-black outline-none border border-solid border-slate-200 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' 
+                            onChange={priceChangeHandler}
                         />
                         <input 
                             type="number" 
+                            name='max'
                             placeholder={`${maxPrice.toFixed(2)}`} 
                             className='w-2/3 rounded-md bg-white text-black outline-none border border-solid border-slate-200 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+                            onChange={priceChangeHandler}
                         />
                     </span>
                 </span>  
+            </div>
+
+            <div className='w-full h-fit py-1 mt-auto mb-2 flex items-center justify-between text-black'>
+                <div className='px-2 py-1 bg-black text-white cursor-pointer'>APPLY</div>
+                <div className='px-2 py-1 border border-solid border-black cursor-pointer'>CANCEL</div>
             </div>
         </div>
     )
