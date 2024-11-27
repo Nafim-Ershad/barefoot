@@ -4,11 +4,7 @@ import { verifyToken } from '@/lib/utils';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextRequest) {
-    if (req.method !== 'GET') {
-      return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
-    }
-
+export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const token = searchParams.get('token');
 
