@@ -16,7 +16,7 @@ async function sendVerificationEmail(email: string, token: string) {
         secure: true,
         auth: {
             user: 'beta.tester14369@gmail.com',
-            pass: 'iqulyayhekcrtzoq',
+            pass: process.env.EMAIL_PASSWORD,
         },
         logger: true,
         debug: true
