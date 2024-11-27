@@ -1,13 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/utils';
-import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextRequest) {
     if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
+      return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -38,6 +37,3 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return NextResponse.json({ error: 'Invalid or expired token' }, { status: 200 });
   }
 }
-
-
-export { handler as GET, handler as POST};

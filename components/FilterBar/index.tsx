@@ -12,7 +12,7 @@ import RadioGroupFilter from '../RadioGroupFilter';
 import { tFilter } from '@/lib/type';
 import { browseData } from '@/data/data';
 import { FilterContext, tFilterOptions } from '@/providers/FilterOptions/FilterOptions.Context';
-import { filterArray } from '@/lib/utils';
+// import { filterArray } from '@/lib/utils';
 
 function Index(): ReactNode {
     
@@ -148,7 +148,7 @@ function Index(): ReactNode {
     
     // Apply Button Press
     const handleApply = () => {
-        filterArray(filterOptions.filter, browseData);
+        // filterArray(filterOptions.filter, browseData);
         resetFilterOptions();
     }
 
