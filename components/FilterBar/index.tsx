@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { ChangeEvent, ReactNode, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import isEqual from "lodash.isequal";
 import { ChevronsDown } from 'lucide-react';
 
 import Checkbox from '../Checkbox';
@@ -9,20 +11,24 @@ import RadioGroupFilter from '../RadioGroupFilter';
 
 import { tFilter } from '@/lib/type';
 import { browseData } from '@/data/data';
-import { FilterContext } from '@/providers/FilterOptions/FilterOptions.Context';
+import { FilterContext, tFilterOptions } from '@/providers/FilterOptions/FilterOptions.Context';
+import { filterArray } from '@/lib/utils';
 
 function Index(): ReactNode {
     
     const [ extendedColorMenu, setExtendedColorMenu ] = useState<boolean>(false);
     const [ extendedSizeMenu, setExtendedSizeMenu ] = useState<boolean>(false);
     const [ extendedCollectionMenu, setExtendedCollectionMenu ] = useState<boolean>(false);
-
+    const [ enableApply, setEnableApply ] = useState<boolean>(false);
+    
+    
     const allPrices = browseData.map(data => data.price);
-
+    
     const minPrice = Math.min(...allPrices);
     const maxPrice = Math.max(...allPrices);
-
+    
     const { filterOptions, setFilterOptions } = useContext(FilterContext);
+    const [initialFilterOptions, setInitialFilterOptions] = useState<tFilter>(filterOptions.filter);
 
     const allColors: string[] = [];
     browseData.forEach(data => data.colors.forEach(color => !allColors.includes(color) ? allColors.push(color): null));
@@ -72,7 +78,6 @@ function Index(): ReactNode {
     }
 
     const changeRadioFilter = (value: string) => {
-        console.log(value);
         setFilterOptions({
             ...filterOptions,
             filter: {
@@ -84,21 +89,77 @@ function Index(): ReactNode {
 
     const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFilterOptions({
-            ...filterOptions,
-            filter: {
-                ...filterOptions.filter,
-                price: {
-                    ...filterOptions.filter.price,
-                    [name]: parseFloat(value)
+        if(value){
+            setFilterOptions({
+                ...filterOptions,
+                filter: {
+                    ...filterOptions.filter,
+                    price: {
+                        ...filterOptions.filter.price,
+                        [name]: parseFloat(value)
+                    }
                 }
+            });
+            return;
+        }
+
+        switch(name){
+            case 'max':
+                setFilterOptions({
+                    ...filterOptions,
+                    filter: {
+                        ...filterOptions.filter,
+                        price: {
+                            ...filterOptions.filter.price,
+                            max: 999999
+                        }
+                    }
+                });
+                break;
+            case 'min':
+                setFilterOptions({
+                    ...filterOptions,
+                    filter: {
+                        ...filterOptions.filter,
+                        price: {
+                            ...filterOptions.filter.price,
+                            min: 0
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Filter Reset
+    const resetFilterOptions = () => {
+        setFilterOptions((prevState) => {
+            return {
+                ...prevState,
+                filter: { ...initialFilterOptions }
             }
-        });
+        })
+    }
+
+    // Checks whether the state changed or not
+    const hasStateChanged = useMemo(() => !isEqual(filterOptions.filter, initialFilterOptions), [filterOptions.filter, initialFilterOptions]);
+    
+    // Apply Button Press
+    const handleApply = () => {
+        filterArray(filterOptions.filter, browseData);
+        resetFilterOptions();
+    }
+
+    // Cancel Button Press
+    const handleCancel = () => {
+        resetFilterOptions();
     }
 
     useEffect(() => {
-        // console.log(filterOptions.filter);
-    })
+        setEnableApply(hasStateChanged);
+    }, [filterOptions.filter, initialFilterOptions])
 
     return (
         <div className='sm:w-40 sm:h-[95%] px-2 py-1 border-r-[1px] hidden sm:flex sm:flex-col sm:items-start sm:justify-start gap-2 overflow-y-auto'>
@@ -211,8 +272,8 @@ function Index(): ReactNode {
             </div>
 
             <div className='w-full h-fit py-1 mt-auto mb-2 flex items-center justify-between text-black'>
-                <div className='px-2 py-1 bg-black text-white cursor-pointer'>APPLY</div>
-                <div className='px-2 py-1 border border-solid border-black cursor-pointer'>CANCEL</div>
+                <div className={`px-2 py-1 rounded-md ${ enableApply ? 'bg-black pointer-events-auto hover:cursor-pointer' : 'bg-gray-300 pointer-events-none hover:cursor-not-allowed'} text-white`} onClick={handleApply}>APPLY</div>
+                <div className='px-2 py-1 rounded-md border border-solid border-black cursor-pointer' onClick={handleCancel}>CANCEL</div>
             </div>
         </div>
     )

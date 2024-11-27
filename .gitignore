@@ -17,6 +17,10 @@
 /build
 /dist
 
+# docker
+/docker
+/db-data
+
 # misc
 .DS_Store
 *.pem

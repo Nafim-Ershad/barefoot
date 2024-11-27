@@ -9,6 +9,7 @@ import AppProvider from "@/providers/AppProvider";
 import NavBar from "@/components/NavBar/NavBar.component";
 import BottomNav from "@/components/BottomNav/BottomNav.component";
 import FilterOptionsProvider from "@/providers/FilterOptions/FilterOptions.Provider";
+import { SessionProvider } from "next-auth/react";
 
 const agdasima = Agdasima({
   weight: "400",
@@ -26,25 +27,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${agdasima.className} antialiased relative w-screen h-screen`}
-      >
-        <AppProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-            >
-            <FilterOptionsProvider>
-              <NavBar/>
-              {children}
-              <BottomNav/>
-            </FilterOptionsProvider>
-            <Analytics/>
-          </ThemeProvider>
-        </AppProvider>
-      </body>
+      <AppProvider>
+        <SessionProvider>
+          <body
+            className={`${agdasima.className} antialiased relative w-screen h-screen`}
+          >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              >
+              <FilterOptionsProvider>
+                <NavBar/>
+                {children}
+                <BottomNav/>
+              </FilterOptionsProvider>
+              <Analytics/>
+            </ThemeProvider>
+          </body>
+        </SessionProvider>
+      </AppProvider>
     </html>
   );
 }

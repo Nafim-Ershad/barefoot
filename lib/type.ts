@@ -10,3 +10,13 @@ export type tFilter = {
 }
 
 export type tSortBy = 'price_asc' | 'price_desc' | 'popular_asc' | 'popular_desc';
+
+export type tUser = {
+    id: string;
+    fullname: string;
+    username: string;
+    email: string;
+    isAdmin: boolean;
+    isVerified: boolean;
+    avatar: string | null;
+}
