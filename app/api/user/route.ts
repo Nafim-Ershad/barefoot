@@ -11,7 +11,7 @@ export async function GET(request: NextRequest){
         if(userId){
             const user = await prisma.user.findUnique({
                 where: { id: userId },
-                select: { fullname: true, username: true, email: true }
+                select: { fullname: true, username: true, email: true, id: true }
             });
             if(user){
                 return new NextResponse(JSON.stringify(user));

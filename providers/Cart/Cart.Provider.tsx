@@ -9,7 +9,7 @@ export default function CartProvider({ children }: HTMLAttributes<HTMLDivElement
 
     const getTotalPrice = () => {
         if(cartItems.length){
-            return cartItems.reduce((acc, currentItem) => acc + (currentItem.item.price * currentItem.quantity) , 0)
+            return (cartItems.reduce((acc, currentItem) => acc + (currentItem.item.price * currentItem.quantity) , 0)).toFixed(2);
         }
         return null;
     }

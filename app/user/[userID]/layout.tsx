@@ -1,14 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { HTMLAttributes, ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { BookUser, CirclePower, CircleUser, CreditCard, Eye, ScrollText } from 'lucide-react';
 import { UserPageSettingsContext } from '@/providers/UserSettings/UserSettings.Context';
 import { signOut } from 'next-auth/react';
 
-function Layout({ children }: HTMLAttributes<HTMLDivElement> ): ReactNode {
+interface iUserPageProps {
+  children?: ReactNode
+}
+
+function Layout({ children }: iUserPageProps ): ReactNode {
   const { userID } = useParams();
   const pathname = usePathname();
   const { pageSettings, setPageSettings } = useContext(UserPageSettingsContext);

@@ -10,7 +10,7 @@ export type tCart = {
 
 interface iCart {
     cartItems: tCart[];
-    getTotalPrice: () => number | null;
+    getTotalPrice: () => string | null;
     addToCart: (cartItem: browseDataType) => void;
     updateCart: (id: string | number, quantity: number) => void;
     removeFromCart: (id: string | number) => void;

@@ -5,7 +5,12 @@ import { useEffect, useState } from 'react';
 
 export default function Page(){
     const { userId } = useParams();
-    const [ userData, setUserData ] = useState(null);
+    const [ userData, setUserData ] = useState<{
+        fullname: string;
+        username: string;
+        id: string;
+        email: string;
+    } | null>(null);
     const [ timer, setTimer ] = useState(5);
     const router = useRouter();
     
@@ -27,7 +32,7 @@ export default function Page(){
 
     return(
         <div className='w-full h-full flex flex-col items-center justify-center gap-4'>
-            <span>Welcome { userData?.username }</span>
+            <span>Welcome { userData ? userData.username : '____'}</span>
             <span>Redirecting In ... { timer }</span>
         </div>
     )

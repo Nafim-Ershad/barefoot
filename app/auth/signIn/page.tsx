@@ -74,7 +74,7 @@ function Page(): ReactNode {
       {/* BUTTONS CONTAINER */}
       <div className='w-full px-2 md:px-3 py-0 md:py-2 flex flex-col items-center justify-start md:gap-6 gap-3'>
         <div className='w-full py-1 flex items-center justify-center bg-black text-white border-2 border-solid border-white rounded-md cursor-pointer hover:bg-white hover:text-black hover:border-black transition-all duration-300 ease-in-out'>
-          <button className='flex items-center justify-center gap-2' type='submit' onClick={handleLogin}>
+          <button className='w-full flex items-center justify-center gap-2' type='submit' onClick={handleLogin}>
             <span>
               Log In
             </span>

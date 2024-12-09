@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from 'bcryptjs';
 import { getUserByEmail, getUserHashedPassword } from "./db";
+import { generateToken } from "./utils";
+import { sendVerificationEmail } from "@/app/api/auth/sendVerificationEmail";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({ 
     secret: process.env.NEXT_SECRET,
@@ -26,17 +28,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         }
                         const { email, password } = credentials;
 
-                        const user = await getUserByEmail(email);
+                        const user = await getUserByEmail(email as string);
 
                         if (!user) {
                             throw new Error("Invalid credentials");
                         }
-                        const hashedPassword = await getUserHashedPassword(email);
+                        const hashedPassword = await getUserHashedPassword(email as string);
                         
                         if(hashedPassword){
-                            const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+                            const isPasswordValid = await bcrypt.compare(password as string, hashedPassword);
                             if(isPasswordValid)
                             {
+                                if(!user.isVerified){
+                                    // This code sends another verification email if the user is not verified through email
+                                    // User have to login again after verification
+                                    const token = generateToken({ userId: user.id });
+                                    // Send verification email
+                                    await sendVerificationEmail(email as string, token);
+
+                                    return null;
+                                }
                                 return user;
                             }
                         }

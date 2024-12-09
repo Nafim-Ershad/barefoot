@@ -72,7 +72,6 @@ function Page(): ReactNode {
   }
 
   const registerUser = () => {
-
     if(validatePassword(formData.password)){
       setErrors({...errors, password: ""})
       fetch('/api/auth/register', {

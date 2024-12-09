@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/utils';
+import { JwtPayload } from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -14,17 +15,19 @@ export async function GET(req: NextRequest) {
 
   try {
     // Verify the JWT token
-    const decoded = verifyToken(token);
+    const decoded = verifyToken(token) as JwtPayload;
 
-    console.log(decoded);
+    console.log("Verify-Email Route:", decoded);
 
     // Find the user and mark them as verified
     const user = await prisma.user.update({
-      where: { id: decoded.userId },
+      // where: { id: decoded?.userId as string },
+      where: {id: decoded.userId},
       data: { isVerified: true },
     });
     if(user){
       // Redirect to the verification success page
+      // return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verified/${decoded.userId}`);
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verified/${decoded.userId}`);
     }
     return NextResponse.json({ message: 'User not found' }, { status: 400 });
