@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react"
 import type { Metadata } from "next";
-import {Agdasima} from "next/font/google";
+import { Agdasima } from "next/font/google";
 import "./globals.css";
 
 import AppProvider from "@/providers/AppProvider";
@@ -20,7 +20,15 @@ export const metadata: Metadata = {
   title: "Barefeet Travels"
 };
 
-export default function RootLayout({
+// const populatePrisma = async() => {
+//   const prisma = new PrismaClient();
+
+//   const response = await prisma.products.createMany({data: [...browseData]});
+//   console.log(response);
+
+// }
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

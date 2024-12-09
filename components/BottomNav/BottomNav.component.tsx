@@ -12,7 +12,7 @@ export default async function BottomNav(){
     const session = await auth();
     let user: tUser | null = null;
 
-    if(session && session.user){
+    if(session?.user){
         user = await getUserById(session.user.id);
     }
 

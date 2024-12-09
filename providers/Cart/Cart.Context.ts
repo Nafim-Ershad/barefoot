@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction, createContext } from "react";
+// import { Dispatch, SetStateAction, createContext } from "react";
 
+import { createContext } from "react";
 import { browseDataType } from "@/data/data";
 
 export type tCart = {
@@ -8,13 +9,17 @@ export type tCart = {
 }
 
 interface iCart {
-    cartItems: tCart[],
-    setCartItems: Dispatch<SetStateAction<tCart[]>>
+    cartItems: tCart[];
+    getTotalPrice: () => number | null;
+    addToCart: (cartItem: browseDataType) => void;
+    updateCart: (id: string | number, quantity: number) => void;
+    removeFromCart: (id: string | number) => void;
 }
 
-const initialState: tCart[] = []
-
 export const CartContext = createContext<iCart>({
-    cartItems: [ ...initialState ],
-    setCartItems: () => {}
-})
+    cartItems: [],
+    getTotalPrice: () => null,
+    addToCart: () => {},
+    updateCart: () => {},
+    removeFromCart: () => {}
+});

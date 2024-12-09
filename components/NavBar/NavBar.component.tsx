@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { ReactNode, useContext, useEffect } from "react"
+import { ReactNode, useContext, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation";
 import Image from "next/image"
 import Link from "next/link"
@@ -11,17 +11,31 @@ import { ShoppingBag, Heart } from 'lucide-react';
 import { AppContext } from "@/providers/AppProvider";
 import { CartContext } from "@/providers/Cart/Cart.Context";
 
+import CartMenu from "../CartMenu";
+
 export default function NavBar(): ReactNode{
+    const cartRef = useRef<HTMLDivElement>(null);
     const { appState, setAppState } = useContext(AppContext);
     const { cartItems } = useContext(CartContext);
 
     const pathName  = usePathname();
+
+    const toggleCartMenu = (cmd: boolean) => {
+        setAppState({ ...appState, showCart: cmd});
+    }
+
     const changeTab = (tab: string) => {
         setAppState({
             ...appState,
             currentTab: tab
         })
     }  
+
+    const handleOutsideClick = (event: MouseEvent) => {
+        if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+            toggleCartMenu(false);
+        }
+    }
 
     useEffect(()=>{
         switch(pathName)
@@ -39,7 +53,19 @@ export default function NavBar(): ReactNode{
                 changeTab("");
                 break;
         }
-    }, [pathName]);
+
+        if(appState.showCart)
+        {
+            document.addEventListener('mousedown', handleOutsideClick);
+        }
+        else{
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+          };
+    }, [pathName, appState.showCart]);
 
     return(
         <header className={"relative z-10 w-full h-auto pt-3 px-8 flex items-center justify-between text-black"}>
@@ -69,15 +95,21 @@ export default function NavBar(): ReactNode{
                 >KIDS</Link>
             </nav>
             <div className={"px-3 flex items-center justify-between gap-4"}>
-                <div className="relative w-full h-full flex items-center justify-center">
-                    <ShoppingBag className={"cursor-pointer"}/>
+                <div className="relative w-full h-full flex items-center justify-center" ref={cartRef}>
+                    <ShoppingBag 
+                        className={"cursor-pointer"} 
+                        onClick={() => toggleCartMenu(!appState.showCart)}
+                    />
                     {
-                        cartItems.length ? 
-                        <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 w-3 h-3 flex items-center justify-center">
-                            { cartItems.length }
+                        cartItems?.length ? 
+                        <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 w-3 h-3 p-2 rounded-full flex items-center justify-center bg-red-600 text-xs text-white font-bold pointer-events-none">
+                            { cartItems?.length }
                         </span>
                         :
                         null
+                    }
+                    {
+                        appState.showCart && <CartMenu />
                     }
                 </div>
                 <div className="relative w-full h-full flex items-center justify-center">

@@ -2,14 +2,19 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function getUserById(id: string){
-    const user = await prisma.user.findUnique({ 
-        where: { id },
-        
-        select: { username: true, fullname: true, email: true, id: true, isAdmin: true, isVerified: true, avatar: true }
-    }); 
+export async function getUserById(id: string | undefined){
+    try{
+        const user = await prisma.user.findUnique({ 
+            where: { id },
+            
+            select: { username: true, fullname: true, email: true, id: true, isAdmin: true, isVerified: true, avatar: true }
+        }); 
+        return user;
+    }
+    catch(err){
+        throw Error(`Server Error:\n${err}`);
+    }
 
-    return user;
 }
 
 export async function getUserByEmail(email: string){

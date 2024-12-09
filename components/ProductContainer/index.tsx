@@ -1,6 +1,7 @@
 'use client';
 
 import { HTMLAttributes, ReactNode, useContext, useMemo } from "react";
+
 import ProductCard from "../ProductCard";
 
 import { browseDataType } from "@/data/data";
@@ -14,7 +15,7 @@ export default function ProductContainer({ items }: iProductContainer ): ReactNo
     
     const { filterOptions } = useContext(FilterContext);
     // useMemo for derived states || useEffect for local state
-    const sortedItems = useMemo(() => {
+    const sortedItems: browseDataType[] = useMemo(() => {
         return [...items].sort((a, b) => {
             switch(filterOptions.sortBy){
                 case "price_asc":
@@ -30,11 +31,14 @@ export default function ProductContainer({ items }: iProductContainer ): ReactNo
     }, [filterOptions.sortBy, items]);
 
     return(
-        <div className="w-full h-[85%] flex items-center justify-center overflow-y-auto">
-            <div className="w-full h-full px-8 py-3 inline-flex flex-wrap items-center justify-start gap-4">
+        <div className="h-[85%] flex items-center justify-center overflow-y-auto">
+            <div className="w-fit h-full px-8 py-3 grid 2xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4">
             {
                 sortedItems.map((item, idx) => <ProductCard key={idx} item={item}/>)
             }
+            </div>
+            <div>
+                
             </div>
         </div>
     )

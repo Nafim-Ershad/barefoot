@@ -5,7 +5,8 @@ import UserSettingsPageProvider from "./UserSettings/UserSettings.Provider";
 import CartProvider from "./Cart/Cart.Provider";
 
 type tApp = {
-    currentTab: 'men' | 'women' | 'kids' | string
+    currentTab: 'men' | 'women' | 'kids' | string,
+    showCart: boolean
 }
 
 interface iApp{
@@ -14,7 +15,8 @@ interface iApp{
 }
 
 const initialState: tApp = {
-    currentTab: "none"
+    currentTab: "none",
+    showCart: false
 }
 
 export const AppContext = createContext<iApp>({
