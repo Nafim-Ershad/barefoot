@@ -10,19 +10,22 @@ import ColorCheckbox from '../ColorCheckbox';
 import RadioGroupFilter from '../RadioGroupFilter';
 
 import { tFilter } from '@/lib/type';
-import { browseData } from '@/data/data';
+// import { browseData } from '@/lib/type';
 import { FilterContext, tFilterOptions } from '@/providers/FilterOptions/FilterOptions.Context';
+import { getAllProducts } from '@/lib/db';
 // import { filterArray } from '@/lib/utils';
 
 function Index(): ReactNode {
     
+    let browseData;
+
     const [ extendedColorMenu, setExtendedColorMenu ] = useState<boolean>(false);
     const [ extendedSizeMenu, setExtendedSizeMenu ] = useState<boolean>(false);
     const [ extendedCollectionMenu, setExtendedCollectionMenu ] = useState<boolean>(false);
     const [ enableApply, setEnableApply ] = useState<boolean>(false);
     
     
-    const allPrices = browseData.map(data => data.price);
+    const allPrices = browseData?.map(data => data.price);
     
     const minPrice = Math.min(...allPrices);
     const maxPrice = Math.max(...allPrices);
@@ -31,10 +34,10 @@ function Index(): ReactNode {
     const [initialFilterOptions, setInitialFilterOptions] = useState<tFilter>(filterOptions.filter);
 
     const allColors: string[] = [];
-    browseData.forEach(data => data.colors.forEach(color => !allColors.includes(color) ? allColors.push(color): null));
+    browseData?.forEach(data => data.colors.forEach(color => !allColors.includes(color) ? allColors.push(color): null));
 
     const allSizes: string[] = [];
-    browseData.forEach(data => data.size.forEach(size => !allSizes.includes(size) ? allSizes.push(size): null));
+    browseData?.forEach(data => data.size.forEach(size => !allSizes.includes(size) ? allSizes.push(size): null));
 
     const allCollections: string[] = ["male", "female", "kids"];
     
@@ -159,6 +162,8 @@ function Index(): ReactNode {
 
     useEffect(() => {
         setEnableApply(hasStateChanged);
+
+        
     }, [filterOptions.filter, initialFilterOptions])
 
     return (

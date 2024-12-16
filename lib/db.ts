@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { browseDataType } from "@/lib/type";
 
 const prisma = new PrismaClient();
 
@@ -41,4 +42,16 @@ export async function getUserHashedPassword( email: string | null = null){
     }
 
     return user?.password;
+}
+
+
+// GET PRODUCTS
+export async function getAllProducts(): Promise<browseDataType[]>{
+    const allProducts = await prisma.products.findMany();
+
+    if(allProducts)
+    {
+        return allProducts;
+    }
+    return [];
 }

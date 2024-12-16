@@ -20,3 +20,18 @@ export type tUser = {
     isVerified: boolean;
     avatar: string | null;
 }
+
+export type browseDataType = {
+    id: string,
+    name: string,
+    // collection: "men" | "women" | "kids",
+    collection: string,
+    year: number,
+    category: string[],
+    instock: boolean,
+    price: number,
+    imgURL: string,
+    colors: string[],
+    size: string[],
+    sold: number
+}

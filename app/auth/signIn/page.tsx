@@ -7,7 +7,11 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
+import { grid } from "ldrs"; // Loader Library
+
 import CustomInput from '@/components/CustomInput';
+
+grid.register();
 
 function Page(): ReactNode {
   const router = useRouter();
@@ -54,7 +58,14 @@ function Page(): ReactNode {
   return (
     <div className='w-1/2 md:w-1/3 px-3 py-4 flex flex-col items-center justify-start md:gap-4 gap-1'>
       {
-        loading && <div className='absolute top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-slate-200/90 text-black text-3xl font-extrabold'>Loading</div>
+        loading && <div className='absolute top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-slate-200/90 text-black text-3xl font-extrabold'>
+          <l-grid
+            size='60'
+            speed='1.0'
+            color='black'
+          >
+          </l-grid>
+        </div>
       }
       {/* FORM HEADER */}
       <div className='w-full px-2 md:px-3 py-0 md:py-2 flex flex-col items-start justify-start md:gap-2 gap-1'>

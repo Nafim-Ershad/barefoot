@@ -124,9 +124,9 @@ function Page(): ReactNode {
       </div>
       {/* BUTTONS CONTAINER */}
       <div className='w-full md:px-3 md:py-2 px-2 py-1 flex flex-col items-center justify-start gap-6'>
-        <div className='w-full py-1 flex items-center justify-center bg-black text-white border-2 border-solid border-white rounded-md cursor-pointer hover:bg-white hover:text-black hover:border-black transition-all duration-300 ease-in-out'>
+        <div className='w-full flex items-center justify-center bg-black text-white border-2 border-solid border-white rounded-md cursor-pointer hover:bg-white hover:text-black hover:border-black transition-all duration-300 ease-in-out'>
             <div 
-                className='flex items-center justify-center gap-2'
+                className='w-full h-full py-1 flex items-center justify-center gap-2'
                 onClick={registerUser}
             >
             <span>

@@ -1,32 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ChangeEvent, ReactNode, useContext, useEffect, useRef } from 'react';
+import { ChangeEvent, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+
+import { tSortBy } from '@/lib/type';
+import { browseDataType } from '@/lib/type';
 
 import ProductContainer from '@/components/ProductContainer';
 import FilterBar from '@/components/FilterBar';
 
-import { browseData } from '@/data/data'
 import { FilterContext } from '@/providers/FilterOptions/FilterOptions.Context';
-import { tSortBy } from '@/lib/type';
 
 function Page(): ReactNode {
     
     const { filterOptions, setFilterOptions } = useContext(FilterContext);
     const selectRef = useRef<HTMLSelectElement>(null);
 
+    const [browseData, setBrowseData] = useState<browseDataType[] | null>(null);
+
     const selectChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
         setFilterOptions({
             ...filterOptions,
             sortBy: e.target.value as tSortBy
-        })
-        
+        })    
     }
 
     useEffect(() => {
         if(selectRef?.current){
             selectRef.current.value = filterOptions.sortBy;
         }
+        // Initial Load
+        fetch('/api/product/all')
+            .then(response => response.json())
+            .then(data => setBrowseData(data))
+            .catch(error => console.warn(error)) 
+
     }, [filterOptions.sortBy, selectRef.current?.value])
 
     return (
